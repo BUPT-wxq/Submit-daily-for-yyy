@@ -1,0 +1,27 @@
+考虑对升序数组 aa 求任意两个元素之差的最小值，答案一定为相邻两个元素之差的最小值
+
+朴素的方法是经过一次中序遍历将值保存在一个数组中再进行遍历求解，我们也可以在中序遍历的过程中用 \textit{pre}pre 变量保存前驱节点的值，这样即能边遍历边更新答案，不再需要显式创建数组来保存，需要注意的是 \textit{pre}pre 的初始值需要设置成任意负数标记开头，下文代码中设置为 -1−1。
+
+二叉树的中序遍历有多种方式，包括递归、栈、Morris 遍历等，读者可选择自己最擅长的来实现。下文代码提供最普遍的递归方法来实现
+
+class Solution {
+public:
+    void dfs(TreeNode* root, int& pre, int& ans) {
+        if (root == nullptr) {
+            return;
+        }
+        dfs(root->left, pre, ans);
+        if (pre == -1) {
+            pre = root->val;
+        } else {
+            ans = min(ans, root->val - pre);
+            pre = root->val;
+        }
+        dfs(root->right, pre, ans);
+    }
+    int minDiffInBST(TreeNode* root) {
+        int ans = INT_MAX, pre = -1;
+        dfs(root, pre, ans);
+        return ans;
+    }
+};
